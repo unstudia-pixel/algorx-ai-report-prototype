@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlgoRX - AI Lab Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400;1,9..40,500&family=Lora:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-dark: #004396;
+  --blue-mid: #0065C0;
+  --blue-light: #43A7FF;
+  --red: #FF5338;
+  --amber: #FFB533;
+  --teal: #04C7B3;
+  --purple: #9D3BC5;
+  --black: #000;
+  --s50: #f8fafc;
+  --s100: #f1f5f9;
+  --s200: #e2e8f0;
+  --s300: #cbd5e1;
+  --s400: #94a3b8;
+  --s500: #64748b;
+  --s600: #475569;
+  --s700: #334155;
+  --s900: #0f172a;
+  --nav-h: 68px;
+  --max-w: 1140px;
+  --side-pad: 75px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: #eef1f5; min-height: 100%; }
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #eef1f5;
+  color: var(--s900);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.screen.active { min-height: 100dvh; }
+
+/* ---- Prototype switcher pill ---- */
+.proto-nav {
+  position: fixed; bottom: 80px; right: 24px;
+  background: var(--s900); border-radius: 999px; padding: 5px;
+  display: flex; gap: 2px; z-index: 9999;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+.pnav-btn {
+  background: transparent; color: var(--s500); border: none;
+  padding: 7px 14px; border-radius: 999px;
+  font-family: inherit; font-size: 11px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.pnav-btn.active { background: white; color: var(--s900); }
+.pnav-btn:hover:not(.active) { color: white; }
+
+/* ---- Screens ---- */
+.screen { display: none; }
+.screen.active { display: block; min-height: 100dvh; }
+
+/* ============================
+   HEADER - floating pill
+============================ */
+.site-nav-wrapper {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  width: 720px;
+  max-width: calc(100vw - 32px);
+}
+@media (max-width: 640px) {
+  .site-nav-wrapper { top: 10px; }
+}
+.site-nav {
+  height: 64px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.05);
+  display: flex; align-items: center;
+  padding: 0 40px;
+  gap: 0;
+  margin: 14px auto 0;
+  max-width: 1100px;
+  position: sticky;
+  top: 14px;
+  z-index: 200;
+}
+.site-nav-top {
+  display: contents;
+}
+.logo {
+  display: flex; align-items: center;
+  text-decoration: none; flex-shrink: 0; margin-right: auto; line-height: 0;
+}
+.logo-text {
+  font-size: 21px; font-weight: 800; letter-spacing: -0.5px; line-height: 1;
+}
+.logo-text .algo { color: var(--s900); }
+.logo-text .rx { color: var(--blue-mid); }
+
+/* Tabs centered - modern pill selector */
+.site-nav-tabs {
+  display: flex; align-items: center;
+  position: absolute; left: 50%; transform: translateX(-50%);
+  background: var(--s100); border-radius: 999px; padding: 5px; gap: 0;
+}
+.nav-tab-inline {
+  font-family: inherit; font-size: 13px; font-weight: 500; color: var(--s500);
+  height: 32px; padding: 0 16px; border: none; background: transparent;
+  border-radius: 999px; cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+}
+.nav-tab-inline.active {
+  background: #94a3b8; color: white; font-weight: 600;
+  box-shadow: 0 1px 4px rgba(148,163,184,0.3);
+}
+.nav-tab-inline:hover:not(.active) { color: var(--s700); }
+
+.nav-right {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto;
+}
+.nav-avatar { margin-left: 8px; }
+.nav-icon {
+  width: 40px; height: 40px; border-radius: 50%; background: transparent;
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--s500); transition: background 0.15s;
+}
+.nav-icon:hover { background: var(--s100); }
+.nav-icon svg { width: 20px; height: 20px; }
+.nav-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--red); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+
+/* ---- Pill buttons (matches Figma button library exactly) ---- */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 24px; border-radius: 999px; border: none;
+  font-family: inherit; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  line-height: 1; text-decoration: none;
+}
+.btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+/* Primary / Continue black */
+.btn-dark {
+  background: var(--s900);
+  color: white;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
+.btn-dark:hover {
+  background: var(--s700);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.36);
+  transform: translateY(-1px);
+}
+/* Secondary / Continue blue */
+.btn-blue { background: var(--blue-mid); color: white; }
+.btn-blue:hover { background: var(--blue-dark); }
+/* Destructive */
+.btn-destructive { background: var(--red); color: white; }
+.btn-destructive:hover { background: #e8401e; }
+/* Cancel / Outline */
+.btn-outline { background: transparent; color: var(--s700); border: 1px solid var(--s300); }
+.btn-outline:hover { background: var(--s50); border-color: var(--s400); }
+/* Subtle - light gray fill */
+.btn-subtle { background: var(--s100); color: var(--s600); border: none; }
+.btn-subtle:hover { background: var(--s200); color: var(--s800); }
+/* Ghost - no bg/border */
+.btn-ghost { background: transparent; color: var(--s500); border: none; }
+.btn-ghost:hover { color: var(--s700); }
+/* Locked / disabled */
+.btn-locked { background: var(--s100); color: var(--s400); cursor: not-allowed; border: none; height: 40px; padding: 0 18px; font-size: 14px; }
+.btn-sm { background: #E2E8F0; color: #475569; border: none; height: 40px; padding: 0 18px; font-size: 14px; }
+.btn-sm:hover { background: #cbd5e1; }
+.btn-xs { padding: 6px 12px; font-size: 12px; }
+
+/* (app-tabs removed - tabs are now inline in site-nav) */
+
+/* ============================
+   PAGE CONTENT
+============================ */
+.page-content {
+  max-width: var(--max-w);
+  width: 100%;
+  margin: 0 auto;
+  padding: 88px var(--side-pad) 60px;
+  min-height: calc(100dvh - 60px);
+}
+
+.page-title {
+  font-size: 30px; font-weight: 800; letter-spacing: -0.5px;
+  color: var(--s900); margin-bottom: 4px;
+}
+.page-sub {
+  font-size: 14px; color: var(--s400); font-weight: 400;
+  margin-bottom: 32px;
+}
+
+/* ============================
+   LAB CARDS
+============================ */
+.lab-card {
+  background: white; border: 1px solid var(--s200);
+  border-radius: 16px; padding: 24px 28px;
+  margin-bottom: 16px; transition: box-shadow 0.2s, border-color 0.2s;
+}
+.lab-card:hover { box-shadow: 0 4px 24px rgba(0,101,192,0.08); border-color: #b3d1f0; }
+
+.lc-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px; margin-bottom: 16px;
+}
+.lc-name { font-size: 22px; font-weight: 800; color: var(--s900); margin-bottom: 4px; letter-spacing: -0.3px; }
+.lc-meta {
+  font-size: 13px; color: var(--s400); font-weight: 400;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.meta-sep { color: var(--s300); }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px;
+  border-radius: 6px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.01em; white-space: nowrap;
+}
+.tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.tag-ready { background: #d9f5f1; color: #057a70; }
+.tag-ready::before { background: var(--teal); }
+.tag-pending { background: #fff0c0; color: #7a5200; }
+.tag-pending::before { background: var(--amber); }
+
+.lc-markers { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+.m-chip {
+  font-size: 12px; font-weight: 600; padding: 4px 10px;
+  border-radius: 6px; background: #eef4ff; color: var(--blue-dark);
+  letter-spacing: 0.01em;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.m-chip::before {
+  content: '';
+  width: 14px; height: 14px; flex-shrink: 0;
+  background: center/contain no-repeat;
+}
+/* Critical - arrow up */
+.m-chip.crit {
+  background: #fdddd7; color: #b83010;
+}
+.m-chip.crit::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b83010' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='19' x2='12' y2='5'/%3E%3Cpolyline points='5 12 12 5 19 12'/%3E%3C/svg%3E");
+}
+/* Warning - minus/dash */
+.m-chip.warn {
+  background: #fff0c0; color: #7a5200;
+}
+.m-chip.warn::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a5200' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+}
+/* Normal - checkmark */
+.m-chip:not(.crit):not(.warn)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004396' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+
+.lc-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.locked-note {
+  font-size: 12px; color: var(--s400); font-weight: 400; margin-top: 6px;
+}
+.regen-note {
+  font-size: 12px; color: var(--s500); font-weight: 400; margin-top: 6px;
+}
+/* Generating state on card */
+.btn-generating {
+  background: var(--s900); color: rgba(255,255,255,0.7);
+  cursor: not-allowed; display: inline-flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 24px; border-radius: 999px; border: none;
+  font-family: inherit; font-size: 15px; font-weight: 600;
+}
+.btn-spin {
+  width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.25); border-top-color: white;
+  animation: card-spin 0.7s linear infinite;
+}
+@keyframes card-spin { to { transform: rotate(360deg); } }
+.lc-generating-note { font-size: 12px; color: var(--s400); font-weight: 400; display: inline-flex; align-items: center; gap: 6px; }
+.lc-dots { display: inline-flex; gap: 3px; align-items: center; }
+.lc-dots span { width: 4px; height: 4px; border-radius: 50%; background: var(--s400); animation: dot-pulse 1.2s ease-in-out infinite; }
+.lc-dots span:nth-child(2) { animation-delay: 0.2s; }
+.lc-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dot-pulse { 0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+/* New results available tag */
+.tag-new { background: #fff0c0; color: #7a5200; }
+.tag-new::before { background: var(--amber); }
+
+/* ============================
+   SCREEN 2 - GENERATING
+============================ */
+.gen-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: calc(100dvh - 84px);
+  padding: 40px 24px 48px;
+}
+.pulse-ring {
+  position: relative; width: 72px; height: 72px; margin-bottom: 56px; margin-top: -60px;
+}
+.pulse-ring::before, .pulse-ring::after {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid var(--blue-mid); animation: ring-out 2s ease-out infinite;
+}
+.pulse-ring::after { animation-delay: 0.7s; }
+.pulse-core {
+  position: absolute; inset: 18px; border-radius: 50%;
+  background: var(--blue-mid); animation: core-beat 2s ease-in-out infinite;
+}
+@keyframes ring-out { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
+@keyframes core-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.8); } }
+
+.gen-title { font-size: 20px; font-weight: 700; color: var(--s800); margin-bottom: 6px; text-align: center; }
+.gen-sub { font-size: 14px; color: var(--s400); text-align: center; }
+.dots { display: flex; gap: 6px; margin-top: 32px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--s300); animation: d-pop 1.4s ease-in-out infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes d-pop { 0%, 80%, 100% { transform: scale(1); background: var(--s300); } 40% { transform: scale(1.4); background: var(--blue-mid); } }
+
+.gen-steps {
+  margin-top: 40px; display: flex; flex-direction: column; gap: 10px;
+  width: 100%; max-width: 340px;
+}
+.gen-step {
+  display: flex; align-items: center; gap: 12px;
+  background: white; border: 1px solid var(--s200);
+  border-radius: 12px; padding: 12px 16px;
+}
+.step-icon {
+  width: 26px; height: 26px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0; font-weight: 700;
+}
+.step-done { background: #e6faf8; color: #0a7a6e; }
+.step-doing { background: #eef4ff; color: var(--blue-mid); animation: step-pulse 1.5s ease-in-out infinite; }
+.step-wait { background: var(--s100); color: var(--s400); }
+@keyframes step-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.step-text { font-size: 13px; font-weight: 500; color: var(--s600); }
+.step-text.done { color: #0a7a6e; }
+.step-text.doing { color: var(--blue-mid); font-weight: 600; }
+
+/* ============================
+   REPORT TOPBAR
+============================ */
+.report-topbar {
+  position: sticky; top: 14px; z-index: 200;
+  background: white; border-radius: 14px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.05);
+  height: 64px; padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1100px; margin: 0 auto;
+}
+
+/* ============================
+   REPORT HEADER
+============================ */
+.report-hero {
+  background: #5BB8F9 url('report-header-bg.png') center top/cover no-repeat;
+  padding-top: 92px;
+}
+.report-hero .site-nav {
+  position: fixed; top: 14px;
+  left: 50%; transform: translateX(-50%);
+  width: calc(min(1100px, 100vw - 32px));
+  margin: 0;
+}
+.report-header {
+  padding: 0 var(--side-pad);
+}
+.rh-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 40px 0 56px;
+  position: relative;
+}
+.rh-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.15); border: none; border-radius: 6px;
+  padding: 5px 12px; font-family: inherit; font-size: 12px; font-weight: 600;
+  color: white; cursor: pointer; margin-bottom: 20px; transition: background 0.15s;
+}
+.rh-back:hover { background: rgba(255,255,255,0.25); }
+.rh-back svg { width: 14px; height: 14px; }
+.rh-export {
+  position: absolute; bottom: 56px; right: 0;
+}
+.rh-left { display: flex; flex-direction: column; align-items: flex-start; }
+.rh-right { display: none; }
+.rh-visual-tier {
+  display: inline-flex; align-items: center;
+  background: var(--s900); color: white;
+  border-radius: 999px; padding: 5px 14px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.rh-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.2); border-radius: 6px; padding: 4px 12px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
+  color: white; margin-bottom: 20px;
+}
+.rh-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: white; flex-shrink: 0; }
+
+.rh-title {
+  font-size: clamp(30px, 4vw, 50px); font-weight: 800; color: white;
+  letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 32px;
+}
+.rh-meta-row { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 28px; }
+.rh-meta-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.13em;
+  text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 4px;
+}
+.rh-meta-val { font-size: 15px; font-weight: 700; color: white; }
+.junction-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.2); border-radius: 6px;
+  padding: 4px 12px; font-size: 12px; font-weight: 600; color: white;
+}
+.junction-dot { width: 7px; height: 7px; border-radius: 50%; background: white; flex-shrink: 0; }
+
+/* ============================
+   REPORT BODY
+============================ */
+.report-body {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 40px var(--side-pad) 80px;
+}
+
+/* Insight Engine Card */
+.insight-card {
+  background: white; border: 1px solid var(--s200);
+  border-radius: 16px; padding: 28px 32px; margin-bottom: 44px;
+}
+.ic-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding-bottom: 22px; border-bottom: 1px solid var(--s100); margin-bottom: 24px;
+}
+.ic-icon {
+  width: 40px; height: 40px; border-radius: 10px; background: var(--blue-mid);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ic-icon svg { width: 18px; height: 18px; }
+.ic-title { font-size: 17px; font-weight: 700; color: var(--s900); }
+.ic-sub { font-size: 12px; color: var(--s400); font-weight: 400; margin-top: 3px; }
+
+.ic-narrative {
+  font-family: inherit; font-style: normal;
+  font-size: 15px; line-height: 1.7; color: var(--s700);
+  background: var(--s50); border-radius: 12px;
+  padding: 16px 20px; margin-bottom: 28px;
+}
+
+.ic-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 640px) { .ic-cols { grid-template-columns: 1fr; gap: 24px; } }
+
+.ic-col-head {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.15em; padding-left: 12px; border-left: 3px solid;
+  margin-bottom: 14px; color: var(--s800);
+}
+.ic-col-head.red { border-color: var(--red); }
+.ic-col-head.blue { border-color: var(--blue-mid); }
+
+.alert-card {
+  background: var(--s50); border: 1px solid var(--s200); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.ac-name { font-size: 13px; font-weight: 600; color: var(--s900); }
+.ac-ref { font-size: 11px; color: var(--s400); margin-top: 2px; }
+.ac-right { text-align: right; flex-shrink: 0; }
+.ac-val {
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 20px; font-weight: 700; line-height: 1;
+  display: flex; align-items: center; gap: 4px; justify-content: flex-end;
+}
+.ac-val svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ac-val.red { color: var(--red); }
+.ac-val.amber { color: var(--amber); }
+.ac-pill {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  padding: 2px 7px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: 0.05em; margin-top: 3px;
+}
+.pill-red { background: var(--red); color: white; }
+.pill-amber { background: var(--amber); color: white; }
+
+.rec { display: flex; gap: 12px; align-items: flex-start; padding: 11px 0; border-bottom: 1px solid var(--s100); }
+.rec:last-child { border-bottom: none; }
+.rec-num {
+  width: 28px; height: 28px; border-radius: 8px; background: var(--blue-mid); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.rec-text { font-size: 13px; color: var(--s600); line-height: 1.65; }
+
+/* Performance Matrix */
+.matrix-title { font-size: 24px; font-weight: 800; color: var(--s900); letter-spacing: -0.5px; }
+.matrix-sub { font-size: 13px; color: var(--s400); margin-top: 4px; }
+
+.legend {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  background: var(--s50); border: 1px solid var(--s200);
+  border-radius: 12px; padding: 12px 18px; margin: 18px 0 36px;
+}
+.leg-item { display: flex; align-items: center; gap: 7px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.leg-label { font-size: 12px; font-weight: 600; color: var(--s500); }
+
+.cat-group { margin-bottom: 48px; }
+.cat-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em;
+  color: var(--s300); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.cat-label::before, .cat-label::after { content: ''; flex: 1; height: 1px; background: var(--s200); }
+
+.bm-row { margin-bottom: 36px; }
+.bm-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; gap: 16px; }
+.bm-name { font-size: 15px; font-weight: 700; color: var(--s900); }
+.bm-ref { font-size: 11px; color: var(--s400); margin-top: 3px; }
+.bm-val-wrap { text-align: right; flex-shrink: 0; }
+.bm-val {
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 28px; font-weight: 700; letter-spacing: -0.5px; line-height: 1;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.bm-val svg { width: 18px; height: 18px; flex-shrink: 0; }
+.bm-val.red { color: var(--red); }
+.bm-val.amber { color: var(--amber); }
+.bm-val.teal { color: var(--teal); }
+.bm-unit { font-size: 11px; color: var(--s400); margin-top: 2px; }
+
+.rb-outer { position: relative; }
+.rb-labels {
+  position: relative; height: 16px; margin-bottom: 5px;
+  font-size: 9px; color: var(--s400); font-weight: 500;
+}
+.rb-labels span { position: absolute; transform: translateX(-50%); }
+.rb-bar { width: 100%; height: 32px; border-radius: 999px; position: relative; overflow: visible; }
+.rb-fill { width: 100%; height: 100%; border-radius: 999px; overflow: hidden; }
+.rb-marker {
+  position: absolute; top: -5px; bottom: -5px;
+  width: 4px; background: var(--s900); border-radius: 999px;
+  transform: translateX(-50%); z-index: 10;
+  box-shadow: 0 0 0 2px white;
+}
+.rb-marker::after {
+  content: ''; position: absolute;
+  bottom: -10px; left: 50%; transform: translateX(-50%);
+  width: 12px; height: 12px; border-radius: 50%;
+  background: white; border: 3px solid var(--s900);
+}
+.bm-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+.status-pill {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 700; padding: 4px 12px;
+  border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.sp-crit { background: var(--red); color: white; }
+.sp-warn { background: var(--amber); color: white; }
+.sp-opt { background: var(--teal); color: white; }
+.bm-id { font-size: 9px; color: var(--s300); font-weight: 500; letter-spacing: 0.1em; }
+
+/* ============================
+   APP FOOTER - fixed to bottom
+============================ */
+.site-footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  border-top: 1px solid var(--s200);
+  background: #eef1f5;
+  padding: 12px var(--side-pad);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  z-index: 100;
+}
+.footer-copy { font-size: 12px; color: var(--s400); }
+.footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-legal a { font-size: 12px; color: var(--s400); text-decoration: none; transition: color 0.15s; }
+.footer-legal a:hover { color: var(--s600); }
+
+/* Print info note */
+.print-note {
+  background: #eef4ff; border: 1px solid #c5d9f5; border-radius: 10px;
+  padding: 12px 18px; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 500; color: var(--blue-dark);
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 900px) {
+  :root { --side-pad: 20px; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  :root { --side-pad: 16px; }
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .ic-cols { grid-template-columns: 1fr; }
+  .rh-meta-row { gap: 18px; }
+  .bm-val { font-size: 22px; }
+  .proto-nav { bottom: 80px; }
+  .pnav-btn { padding: 6px 10px; font-size: 10px; }
+  .lc-top { flex-direction: column; gap: 8px; }
+  .rh-inner { padding: 40px 0 48px; }
+}
+
+/* ============================
+   PRINT
+============================ */
+@media print {
+  .proto-nav, .report-topbar, .report-hero .site-nav, .print-note, .site-footer { display: none !important; }
+  .screen { display: block !important; }
+  body { background: white; }
+  .report-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cat-group, .bm-row, .insight-card { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================
+     SCREEN 1 - MY RESULTS
+============================ -->
+<section id="screen-1" class="screen active">
+
+  <nav class="site-nav">
+    <div class="site-nav-top">
+      <a href="#" class="logo">
+        <img src="data:image/png;base64,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" alt="algorx" style="height:28px;width:auto;display:block;">
+      </a>
+      <div class="nav-right">
+        <button class="nav-icon" title="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="nav-icon" title="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </button>
+        <div class="nav-avatar">HH</div>
+      </div>
+    </div>
+    <div class="site-nav-tabs" id="app-tabs-1">
+      <button class="nav-tab-inline" onclick="switchTab(this)">Dashboard</button>
+      <button class="nav-tab-inline active" onclick="switchTab(this)">My Results</button>
+      <button class="nav-tab-inline" onclick="switchTab(this)">Orders</button>
+      <button class="nav-tab-inline" onclick="switchTab(this)">Profile</button>
+    </div>
+  </nav></div>
+
+  <div class="page-content">
+    <h1 class="page-title">My Results</h1>
+    <p class="page-sub">3 lab panels on file</p>
+
+    <!-- Card 1: Generate available -->
+    <div class="lab-card">
+      <div class="lc-top">
+        <div>
+          <div class="lc-name">Performance Panel</div>
+          <div class="lc-meta">
+            <span>Ordered May 10, 2024</span>
+            <span class="meta-sep">·</span>
+            <span>Labcorp</span>
+            <span class="meta-sep">·</span>
+            <span>7 biomarkers</span>
+          </div>
+        </div>
+        <span class="tag tag-ready">Results Ready</span>
+      </div>
+      <div class="lc-markers">
+        <span class="m-chip crit">LDL Cholesterol</span>
+        <span class="m-chip warn">Free Testosterone</span>
+        <span class="m-chip warn">Vitamin D</span>
+        <span class="m-chip">HDL Cholesterol</span>
+        <span class="m-chip">CRP</span>
+      </div>
+      <div class="lc-bottom">
+        <div>
+          <button class="btn btn-dark" onclick="startGeneration(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+            Generate AI Summary
+          </button>
+        </div>
+        <span style="font-size:12px;color:var(--s400);">AI summary not yet generated</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Locked -->
+    <div class="lab-card">
+      <div class="lc-top">
+        <div>
+          <div class="lc-name">Thyroid Panel</div>
+          <div class="lc-meta">
+            <span>Ordered Jun 1, 2024</span>
+            <span class="meta-sep">·</span>
+            <span>Labcorp</span>
+            <span class="meta-sep">·</span>
+            <span>5 biomarkers</span>
+          </div>
+        </div>
+        <span class="tag tag-new">New Results</span>
+      </div>
+      <div class="lc-markers">
+        <span class="m-chip warn">TSH</span>
+        <span class="m-chip">Free T4</span>
+        <span class="m-chip">Free T3</span>
+        <span class="m-chip warn">TPO Antibodies</span>
+        <span class="m-chip">Reverse T3</span>
+      </div>
+      <div class="lc-bottom">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-dark" onclick="startGeneration(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+              Regenerate Summary
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="showScreen('screen-3')">View Previous</button>
+          </div>
+          <p class="regen-note">New results available - previous summary from Feb 10, 2024</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Locked (original) -->
+    <div class="lab-card">
+      <div class="lc-top">
+        <div>
+          <div class="lc-name">Lipid Panel</div>
+          <div class="lc-meta">
+            <span>Ordered Apr 2, 2024</span>
+            <span class="meta-sep">·</span>
+            <span>Quest Diagnostics</span>
+            <span class="meta-sep">·</span>
+            <span>4 biomarkers</span>
+          </div>
+        </div>
+        <span class="tag tag-ready">Results Ready</span>
+      </div>
+      <div class="lc-markers">
+        <span class="m-chip crit">LDL Cholesterol</span>
+        <span class="m-chip">HDL Cholesterol</span>
+        <span class="m-chip">Total Cholesterol</span>
+        <span class="m-chip">Triglycerides</span>
+      </div>
+      <div class="lc-bottom">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-locked" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Summary Generated - Apr 3, 2024
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="showScreen('screen-3')">View Report</button>
+          </div>
+          <p class="locked-note">New lab results needed to regenerate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span class="footer-copy">AlgorX &copy; 2024</span>
+    <div class="footer-legal">
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Telehealth consent</a>
+    </div>
+  </footer>
+
+</section>
+
+<!-- ============================
+     SCREEN 2 - GENERATING
+============================ -->
+<section id="screen-2" class="screen">
+
+  <nav class="site-nav">
+    <div class="site-nav-top">
+      <a href="#" class="logo">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOYAAABOCAYAAAA0JWo4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAADnBJREFUeAHtnU1sHVcVgK9NEE2pFBdXohIpttXSRCLIjqiEVBZxRNk1vGTTsLPDDrKILdiwKLGpxKpS7AXtDjs7aBdx2i4LcRYUIRXFVqloqlax1UQUKSG2REsrFRV/I93X5+d5b865P/Nm8u4nPSV5mTczd+aee84995xzBz7fwVSYjY0NMzMzYy5fviz+zYULF7LfJBJ1ZdBUnNHRUbOysmIajYb4N1tbWyaRqDOVF0xL0oCJfqI2gjk5OWkSiX6hNoKZSPQTSTATiQqSBDORqCBJMBOJCpIEM5GoIEkwE4kKkgQzkaggSTATiQqyz3hA6Bsf4lnbIZSOz72CbSef1pA/2jg0NGQmJiZMHbD339oG7t+2I1ENVILJSyVu9erVq2ZtbS1XINshYmd8fNycPHmydtE7dN6FhYWsvaurq4XH076pqSkzPT1tqgD3z33zWV9fL2yDHWCIS6YtVRpsVt/dMivXbpur726bjdufmK3/fmaG9u8zow/dZ0aH7zON8WFz/PCDZmT4K7t+t3bzP2br489E1xgb3r/n965wTa4tpf3aA5LsEl7o/Py8qHN2g1GZjnvmzBkzMjJitAwMDIiOO3/+vJmbmzOuMOBwj67tpZ1LS0u7BiJifRcXFwt/izBcu3bN+LC5uZll2Fy8eNEroJ97OXfunPNAgwBNPr9mNv/9qej4xtFhs/LTI7u+Qxhn/vCe6Bx5v+f6CLOEofv3mbVnnwginBO/ftOs3/xIfPzS1CEz/f2Hm//uOsekYx4/fjz7+Aol0OERcDrs8vKyqSIIz9GjR73aSzt5Zq2Dg1RAfATJXpeBgXb4ZtlgFTFAjY2NOT0PtNnar54w4we/Kjq+XbMhkKdefFss2HmacXn6sBn5mkzQ+D2CLNWwneC+NUJ57qlv7BJK6CiYCFAogWzHaqSqZYxwP3xCpY3xDMsya9GOvgNKJ/IGGilooZkfHjRappfeMYt/vGV8YXBY/slh8fEbdz7JBMuVxddvqe4bM3zhmcf2fJ8rmHQmH1NQCqN6VeadtFliampBYGIPQHYAiJ2HynUwb7XXmXxc51Saf2XTXPzLv0wouP6FZx4VH8+1F16/abSsf/CRmXlJLtQI5eov8ufxewSTh09nKgscK73WnLHbjMBLHGWgnXvz7MoYRC04kRhMYw0COHnmXtswoZl56qCZevLr4uNnX3rfrF6Xt5H5dOO3bxkNKz870nE+u0swmfeV+ZItdNwYJpiEstrMABQaBpQYWr4IhBMve2g2b39qpn/3jokFJqN0vglnlq+bzTuy+a3GyQVo8PFHOs+9m4LJiO7aQXGzM9LzcV0LY85ZNrR5dnbWuEBbWQY6duxY9mfZa4AIZC8GUQsDTejrM7/TdG4tzHcxHVlmkd5P44W3Cp1BUq+x5fyJkUyDd6MpmGgs3OxS8Pzhkr9x44a5e/duc/Gdv/MdywUas4zflq016VgakwwhpM22vXgtuWf+5DuWObTtdsFlEGXgYOnj0qVL2fthlYwP98x3LGNpCbGEJgVhOvb4gaxTL00fan7waPK9FJxBl85+W3w888a5VzY6/v/yGx+qnD14qOdOjBYe11zHRNCkgskLZuG9CDo9HUhqbtHxu73okOuYmLBSLU2n5pyauTDPh46rnYsVPQPA0aOZE/O+eB5FWt0KvObckvtF84z98q/GBRwk536ws5zw5MOZxut4jZ05Xnb8juBJmH9108y9umGkYHrmaTnmxMefX5ecounskayTZhpToy3p0BKhBDoCx0pHd+YuZVW4k94TAxYaUeug4vgrV66Y0PCuNILDgMI7kJjatFU758akJRosBjhrrj373UwgugklZBFAQqEENK9G0+IMWvtgbySP1OOLxpcKJWSCiUBIwIxzMXnoHIysRXSKuw0NnU86ENHpXE1TlhZCz8PQwlJcI6D4HVpWinSg1oCJSnBAkUD6kHlFFc6gUy+8nesMknh8GQg0EUWZYEpGdkZTn2UNaQdBO8VGqnHooDh2fOAcoRxDmnk478tnUJCYvhZpLLEUTL65p0dNbBD6lbNHVM6gqeV/5P4fHt9OEU4SZ0872R3h+i56Cb7ucda+0DxFmiq2xpR2bjp2KE9xqLVGjWZiQPCB/qC5byyLUMEi558eiaopW5l45AFz4fSj2dKIhKvXt83M798zCz/eHa2TCfmOBj763N+yAHtLY2JY5OxpJ2s9zoQyQseIuSwSzNhzTOlWC5jeobyrZGuEEEyNtgzxPq2TT/JOeK4hTFq0ZXvcaGxwLDF/lHpXF/90K5vPtmtBvls6cygzebN/77Rl8fS3jAuVS5Te3pZlArgidVRo5nJFMNf0NWcRDqkvQDKfl8A9S015u1zmC9qyFyycfkzlDJp/bTPXGXRy4qFMQ2qdPe30XQUDqRkbei3SV1g0c7iQ1s+pU6fEx4aYZ0588wHTK7SZKGjGvOAD5pR4k33Sx5wN+bxM+CJ6vdmPtOP4Onzy8K3moHGKhUxw1jwLX43JPI05X6/AFMUZxDxRAs6gky/+3az+fCL3XD6IBNNGt2gqF1QR6cAQI+PF15SVPnOuEzI8UCPkmsixPJiT9ZrMGbSzLsm6pQScQUQGzf1o1ISko2DashpM6stYwigDaTti1CryPae004e+dyvokkGNUD8fDtz/JVMFcOqgDaXOIOaboZ1WuYKJg4Slgnttn0mN1qkrBw7IHRiac/bbnqMP7v+y6vjZl9/PrTnkyh7nD2tXTPjvxRchbVMVBdNXGyXkuOSEhipLYtklmLGy+KuCdCkmlXHsXwiGd80JxfydXg6TT9oUzLIrFyQSVcNqPZ+c0Mtrd7qmiUnJ5pgu+X2s82kXzrU5n6GRrk3yPEI7UXwDJyRRUyGu08+QBhYiURtn0OShoezjSiaYmphQFsoRYpclBW0eYa+IsRxEIrUPUqdODN+AdDBl8PBh++P/mV5BAbAQVfkslN30qVE7qMlYIDCaY13X+XrtUJJq9xj36bvkJNXg7Vs4+KK5b99oqdbg7zKJUQDM1xk0KA3q9q1uDr02s6QjeoxyGSFMWSkh15011kNd9m9pxcfZU3hujxq1g5JcTDRNiBQoX3POF2l4WYyKdr7CrgmNCzmwaKoT1G0TKRdnDwncmjQu1xq1g5IRMVQKVC8dPyAd0e1mPKEIEtytcLSFnMdrUs3qpjG1zh4SoUmIJkg9Zo1aGJSkEoV44JhXVZhjSjVPyJIgIfZp0aZghRgMNF70UKlmZaF19hByd/nsd5r/jlmjFkpL+4pRF8YFaRpTqHIZCIl0Hl+EJgUrxMCiyUmNUQA6Fi7Onvbcylg1ai0iwfQ1QemcVVkm0YzsIeKFpRUAJFAITVOHx2cwRMtrzNi6CKaLs4dsk7xlD1uxQEpRjdpWBiVzRxwArp0LoazShrXci1Q4uXefDkfHDhniiFBqqhSi8Vw8tNqAE9/6QmWidfYUFdKyFQukUJZE4gwalHjSEEqXjWSsUPba6dOOtm6qSxuwEDSmpxRNpULeF9vnaea4dtMgTZpZVXbQLkK7lYG0kBbCy7FSOtWobWVQ6tjhhbH/ouSF2Qrs0uPLRqM1wQonHbxocLKb/cbaFk9blpJ7wCTnfrq9C/vO6A+ad1YXbeni7KHUiBRNWRLoVKPWMrCzjvk5HUkD5h0du1WobTEmX6cJHYj9P3JvNuAWCVaAXEBIWzcSoiPbJRZfYZRsOcA1tAJk4XcIt/Xwcg7MXReTF7Naoo2lWyQwZ7vxm++Z0DC3m3juTfHxmq0MWmH+2l6+shvHDh3ILUsC+6z20CyqM+d0KYtPh6hKWRLaTXlGlzkggqMdfKRVAKTn4vkzsGjPaYXQd1sD3mXISoKxcNm3ks2KXGJcGVhC1KiFzCsbuox/HgiBy/YKMcFrGaPwVjutGioUaD62rOgFtIeBKfauZiFwcfb4ZIVQo1brDFr+84d7vs8EE+0RUzh9y/XHxGdvEimY1jHC1bqZ/bGgHWU8sxBonT3acLtOqDcsenmvM6i5jqndSEaKHV2rWhUg9ujPc43pteTc7HFZhqDYZ1WGleGL1tljw+1CodmwKK9G7a4AA82WeRLqYvLYrfZCm9qYmmVYCpi1POeYUwUG7bIGAF+yhXxFZE97uF0IXDYsokatZU/kDyM8hZ98Yx+td7EOLxLQ6HgYQ+wITdvJ2mldc4wdJ2z3tmR36JBxq7Yt0j02e43W2eO7lUE37IZFUmyNWsgVZ6vp+NjQLE0wc6cKB5y3qNN0+380gsSr6xN0bzdYot18pN5qG2Teqe1lFQJjKYuPy7uzMDDxDDhP3TJGiIM1O6tqUkGbPzEWRSgtOINYr1x645+i41fWb2fFo5tbvRdhK7DnVWKnM/EC6ZB1y8krAk1nlxjaqwPQbpvuVJSWxdKGZIklhkOn/d3ZrS1sMWfbDj68wxiaEVNNQhWqsVcBsWAm/EBwJSl2ISpFJOpP3+321St6tcVBop4kwSwBza5oSTATkASzBDThe3UsaJUITzkb3VcI68yRECqPVBqXGmLn6cS9Qd8JJmuL0moKrN+FEE6pxqxb3ZxEPPrOlCVHVEoI7yjZK1LHT53q5iTi0neCqYnz9K2bw5qhNAPEriEmEtB3gqldQJ+dnXUqP6ktqxIjgSBRX/rSK6upmwOS0hwWl7IqaMsY9YES9aUvI38QHvYCcQkst2VFECareTkPGpLIHpfC1inaJ9FO34bkMXfETO01CHjaxj3RTt8GGGDONhoN00tsFk8i0U5fB7H7VJvzBTO4LtUAEuXT1yF5VjjKTuauU4mORG/o+1hZKyRlRd3Yyg5JKBPdSEHs5gvhDFFWpNs1OH+dyq0kekdKlG7DbptHxE6IuSca0pYrSSSkJMHsgq17xIc1Ssn6JNqQtU6cSghjyhZJuJAEU4ndo6WV1ro5iUQI/g9Mg1L+xV5CTAAAAABJRU5ErkJggg==" alt="algorx" style="height:28px;width:auto;display:block;">
+      </a>
+      <div class="nav-right">
+        <button class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+        <button class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></button>
+        <div class="nav-avatar">HH</div>
+      </div>
+    </div>
+    <div class="site-nav-tabs" id="app-tabs-2">
+      <button class="nav-tab-inline" onclick="switchTab(this)">Dashboard</button>
+      <button class="nav-tab-inline active" onclick="switchTab(this)">My Results</button>
+      <button class="nav-tab-inline" onclick="switchTab(this)">Orders</button>
+      <button class="nav-tab-inline" onclick="switchTab(this)">Profile</button>
+    </div>
+  </nav></div>
+
+  <div class="gen-wrap">
+    <div class="pulse-ring"><div class="pulse-core"></div></div>
+    <p class="gen-title">Analyzing your results...</p>
+    <p class="gen-sub">This may take up to 30 seconds</p>
+    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="gen-steps">
+      <div class="gen-step"><div class="step-icon step-done">&#10003;</div><span class="step-text done">Fetching Junction reference ranges</span></div>
+      <div class="gen-step"><div class="step-icon step-done">&#10003;</div><span class="step-text done">Filtering biomarkers by status</span></div>
+      <div class="gen-step"><div class="step-icon step-doing">&#9679;</div><span class="step-text doing">Running AI analysis...</span></div>
+      <div class="gen-step"><div class="step-icon step-wait">&#9679;</div><span class="step-text">Saving report to your account</span></div>
+    </div>
+    <button class="btn btn-dark" style="margin-top:44px;" onclick="showScreen('screen-3')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Preview Report
+    </button>
+  </div>
+
+</section>
+
+<!-- ============================
+     SCREEN 3 - AI REPORT
+============================ -->
+<section id="screen-3" class="screen">
+
+  <div class="report-hero">
+  <nav class="site-nav">
+    <div class="site-nav-top">
+    <a href="#" class="logo">
+      <img src="data:image/png;base64,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" alt="algorx" style="height:36px;width:auto;display:block;">
+    </a>
+      <div class="nav-right">
+        <button class="nav-icon" title="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="nav-icon" title="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </button>
+        <div class="nav-avatar">HH</div>
+      </div>
+    </div>
+    <div class="site-nav-tabs" id="app-tabs-3">
+      <button class="nav-tab-inline" onclick="switchTab(this)">Dashboard</button>
+      <button class="nav-tab-inline active" onclick="switchTab(this)">My Results</button>
+      <button class="nav-tab-inline" onclick="switchTab(this)">Orders</button>
+      <button class="nav-tab-inline" onclick="switchTab(this)">Profile</button>
+    </div>
+  </nav>
+
+  <div class="report-header">
+    <div class="rh-inner">
+      <div class="rh-left">
+        <button class="rh-back" onclick="showScreen('screen-1')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          My Results
+        </button>
+        <div class="rh-eyebrow"><span class="rh-eyebrow-dot"></span>AI Analysis Report</div>
+        <h1 class="rh-title">Performance Panel<br>(Elite)</h1>
+        <div class="rh-meta-row">
+          <div><div class="rh-meta-label">Patient</div><div class="rh-meta-val">Hafsah Hussain</div></div>
+          <div><div class="rh-meta-label">Lab Date</div><div class="rh-meta-val">May 10, 2024</div></div>
+          <div><div class="rh-meta-label">Generated</div><div class="rh-meta-val">May 11, 2024</div></div>
+        </div>
+        <div class="junction-badge"><span class="junction-dot"></span>Junction Verified</div>
+      </div>
+      <div class="rh-export">
+        <button class="btn btn-subtle btn-sm" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export PDF
+        </button>
+      </div>
+      <div class="rh-right">
+        <svg class="rh-visual-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="54" stroke="#e2e8f0" stroke-width="1.5"/>
+          <circle cx="60" cy="60" r="38" stroke="#e2e8f0" stroke-width="1.5"/>
+          <circle cx="60" cy="60" r="22" stroke="#e2e8f0" stroke-width="1.5"/>
+          <circle cx="60" cy="60" r="54" stroke="#04C7B3" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="254 85" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="38" stroke="#9D3BC5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="167 72" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="7" fill="#9D3BC5" fill-opacity="0.25"/>
+          <circle cx="60" cy="60" r="3.5" fill="#9D3BC5"/>
+        </svg>
+        <div class="rh-visual-tier">Elite</div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="report-body">
+
+    <div class="insight-card">
+      <div class="ic-header">
+        <div class="ic-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+        </div>
+        <div>
+          <div class="ic-title">Clinician Insight Engine</div>
+          <div class="ic-sub">Powered by Claude - Algorithmic Analysis</div>
+        </div>
+      </div>
+      <blockquote class="ic-narrative">"Your testosterone levels are trending towards optimal range, but LDL cholesterol and Vitamin D require immediate attention. Inflammatory markers are well-controlled. Focus protocol: lipid optimization and micronutrient correction."</blockquote>
+      <div class="ic-cols">
+        <div>
+          <div class="ic-col-head red">Sub-Optimal Clusters</div>
+          <div class="alert-card"><div><div class="ac-name">LDL Cholesterol</div><div class="ac-ref">Ref: 0 - 100 mg/dL</div></div><div class="ac-right"><div class="ac-val red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>135</div><span class="ac-pill pill-red">Critical</span></div></div>
+          <div class="alert-card"><div><div class="ac-name">Free Testosterone</div><div class="ac-ref">Ref: 8.7 - 25.1 pg/mL</div></div><div class="ac-right"><div class="ac-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>12.4</div><span class="ac-pill pill-amber">Sub-Optimal</span></div></div>
+          <div class="alert-card"><div><div class="ac-name">Vitamin D</div><div class="ac-ref">Ref: 30 - 100 ng/mL</div></div><div class="ac-right"><div class="ac-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>32</div><span class="ac-pill pill-amber">Sub-Optimal</span></div></div>
+        </div>
+        <div>
+          <div class="ic-col-head blue">Optimization Vector</div>
+          <div class="rec"><div class="rec-num">01</div><div class="rec-text">Reduce saturated fat intake and increase dietary fiber. Consider statin therapy consult for LDL at 135 mg/dL - 35% above reference max.</div></div>
+          <div class="rec"><div class="rec-num">02</div><div class="rec-text">Supplement Vitamin D3 5,000 IU daily with K2 co-factor. Retest in 90 days targeting 60 - 80 ng/mL optimal range.</div></div>
+          <div class="rec"><div class="rec-num">03</div><div class="rec-text">Free testosterone below optimal. Evaluate sleep quality, zinc, and magnesium status as primary levers.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="matrix-title">Performance Matrix</div>
+      <div class="matrix-sub">Biomarkers cross-referenced against Junction optimal ranges</div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div><span class="leg-label">Optimal</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div><span class="leg-label">Sub-Optimal</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div><span class="leg-label">Critical</span></div>
+      </div>
+
+      <div class="cat-group"><div class="cat-label">Hormones</div>
+        <div class="bm-row"><div class="bm-top"><div><div class="bm-name">Total Testosterone</div><div class="bm-ref">Ref: 300 - 1100 ng/dL &nbsp;|&nbsp; Optimal: 700 - 1000</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>680</div><div class="bm-unit">ng/dL</div></div></div><div class="rb-outer" id="bm-ttest"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">TOT-7480</span></div></div>
+      </div>
+
+      <div class="cat-group"><div class="cat-label">Lipids</div>
+        <div class="bm-row"><div class="bm-top"><div><div class="bm-name">LDL Cholesterol</div><div class="bm-ref">Ref: 0 - 100 mg/dL &nbsp;|&nbsp; Optimal: 0 - 70</div></div><div class="bm-val-wrap"><div class="bm-val red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>135</div><div class="bm-unit">mg/dL</div></div></div><div class="rb-outer" id="bm-ldl"></div><div class="bm-bottom"><span class="status-pill sp-crit">Critical - Out of Range</span><span class="bm-id">LDL-1485</span></div></div>
+        <div class="bm-row"><div class="bm-top"><div><div class="bm-name">HDL Cholesterol</div><div class="bm-ref">Ref: 40 - 100 mg/dL &nbsp;|&nbsp; Optimal: 60 - 90</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>48</div><div class="bm-unit">mg/dL</div></div></div><div class="rb-outer" id="bm-hdl"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">HDL-2290</span></div></div>
+      </div>
+
+      <div class="cat-group"><div class="cat-label">Inflammation</div>
+        <div class="bm-row"><div class="bm-top"><div><div class="bm-name">CRP (Inflammation)</div><div class="bm-ref">Ref: 0 - 1.0 mg/L &nbsp;|&nbsp; Optimal: 0 - 0.5</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>0.8</div><div class="bm-unit">mg/L</div></div></div><div class="rb-outer" id="bm-crp"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">CRP-0088</span></div></div>
+      </div>
+
+      <div class="cat-group"><div class="cat-label">Vitamins</div>
+        <div class="bm-row"><div class="bm-top"><div><div class="bm-name">Vitamin D</div><div class="bm-ref">Ref: 30 - 100 ng/mL &nbsp;|&nbsp; Optimal: 60 - 80</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>32</div><div class="bm-unit">ng/mL</div></div></div><div class="rb-outer" id="bm-vitd"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">VTD-3200</span></div></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:32px 0 8px;border-top:1px solid var(--s100);margin-top:16px;">
+      <img src="data:image/png;base64,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" alt="algorx" style="height:24px;width:auto;display:inline-block;mix-blend-mode:multiply;">
+      <p style="font-size:11px;color:var(--s400);max-width:540px;margin:10px auto 0;line-height:1.75;text-transform:uppercase;letter-spacing:0.04em;">AlgoRX is not a clinical practice. Insights provided via the AI pipeline are advisory only. Always consult a licensed medical professional before altering any intervention, medication, or supplement protocol.</p>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">
+    <span class="footer-copy">AlgorX &copy; 2024</span>
+    <div class="footer-legal">
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Telehealth consent</a>
+    </div>
+  </footer>
+
+</section>
+
+<!-- ============================
+     SCREEN 4 - PRINT VIEW
+============================ -->
+<section id="screen-4" class="screen">
+
+  <div class="report-topbar">
+    <a href="#" class="logo">
+      <img src="data:image/png;base64,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" alt="algorx" style="height:28px;width:auto;display:block;">
+    </a>
+    <button class="btn btn-dark btn-sm" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Report
+    </button>
+  </div>
+
+  <div class="report-body" style="padding-top:28px;">
+    <div class="print-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Print-optimized layout. Use your browser print dialog or click Print Report.
+    </div>
+
+    <div style="border:1px solid var(--s200);border-radius:16px;padding:28px 32px;margin-bottom:28px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--s400);margin-bottom:8px;">AI Analysis Report</div>
+          <div style="font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:16px;line-height:1.1;">Performance Panel (Elite)</div>
+          <div style="display:flex;gap:24px;flex-wrap:wrap;">
+            <div><div style="font-size:10px;font-weight:600;color:var(--s400);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:3px;">Patient</div><div style="font-size:14px;font-weight:700;">Hafsah Hussain</div></div>
+            <div><div style="font-size:10px;font-weight:600;color:var(--s400);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:3px;">Lab Date</div><div style="font-size:14px;font-weight:700;">May 10, 2024</div></div>
+            <div><div style="font-size:10px;font-weight:600;color:var(--s400);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:3px;">Generated</div><div style="font-size:14px;font-weight:700;">May 11, 2024</div></div>
+          </div>
+        </div>
+        <div class="junction-badge" style="border-color:var(--s300);color:var(--s700);"><span style="width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0;display:inline-block;"></span>Junction Verified</div>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic-header">
+        <div class="ic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></div>
+        <div><div class="ic-title">Clinician Insight Engine</div><div class="ic-sub">Powered by Claude - Algorithmic Analysis</div></div>
+      </div>
+      <blockquote class="ic-narrative">"Your testosterone levels are trending towards optimal range, but LDL cholesterol and Vitamin D require immediate attention. Inflammatory markers are well-controlled. Focus protocol: lipid optimization and micronutrient correction."</blockquote>
+      <div class="ic-cols">
+        <div>
+          <div class="ic-col-head red">Sub-Optimal Clusters</div>
+          <div class="alert-card"><div><div class="ac-name">LDL Cholesterol</div><div class="ac-ref">Ref: 0 - 100 mg/dL</div></div><div class="ac-right"><div class="ac-val red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>135</div><span class="ac-pill pill-red">Critical</span></div></div>
+          <div class="alert-card"><div><div class="ac-name">Free Testosterone</div><div class="ac-ref">Ref: 8.7 - 25.1 pg/mL</div></div><div class="ac-right"><div class="ac-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>12.4</div><span class="ac-pill pill-amber">Sub-Optimal</span></div></div>
+          <div class="alert-card"><div><div class="ac-name">Vitamin D</div><div class="ac-ref">Ref: 30 - 100 ng/mL</div></div><div class="ac-right"><div class="ac-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>32</div><span class="ac-pill pill-amber">Sub-Optimal</span></div></div>
+        </div>
+        <div>
+          <div class="ic-col-head blue">Optimization Vector</div>
+          <div class="rec"><div class="rec-num">01</div><div class="rec-text">Reduce saturated fat intake and increase dietary fiber. Consider statin therapy consult for LDL at 135 mg/dL.</div></div>
+          <div class="rec"><div class="rec-num">02</div><div class="rec-text">Supplement Vitamin D3 5,000 IU daily with K2 co-factor. Retest in 90 days targeting 60 - 80 ng/mL.</div></div>
+          <div class="rec"><div class="rec-num">03</div><div class="rec-text">Free testosterone below optimal. Evaluate sleep quality, zinc, and magnesium status.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="matrix-title">Performance Matrix</div>
+      <div class="matrix-sub">Biomarkers cross-referenced against Junction optimal ranges</div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div><span class="leg-label">Optimal</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div><span class="leg-label">Sub-Optimal</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div><span class="leg-label">Critical</span></div>
+      </div>
+      <div class="cat-group"><div class="cat-label">Hormones</div><div class="bm-row"><div class="bm-top"><div><div class="bm-name">Total Testosterone</div><div class="bm-ref">Ref: 300 - 1100 ng/dL</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>680</div><div class="bm-unit">ng/dL</div></div></div><div class="rb-outer" id="bm-ttest-p"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">TOT-7480</span></div></div></div>
+      <div class="cat-group"><div class="cat-label">Lipids</div>
+        <div class="bm-row"><div class="bm-top"><div><div class="bm-name">LDL Cholesterol</div><div class="bm-ref">Ref: 0 - 100 mg/dL</div></div><div class="bm-val-wrap"><div class="bm-val red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>135</div><div class="bm-unit">mg/dL</div></div></div><div class="rb-outer" id="bm-ldl-p"></div><div class="bm-bottom"><span class="status-pill sp-crit">Critical</span><span class="bm-id">LDL-1485</span></div></div>
+        <div class="bm-row"><div class="bm-top"><div><div class="bm-name">HDL Cholesterol</div><div class="bm-ref">Ref: 40 - 100 mg/dL</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>48</div><div class="bm-unit">mg/dL</div></div></div><div class="rb-outer" id="bm-hdl-p"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">HDL-2290</span></div></div>
+      </div>
+      <div class="cat-group"><div class="cat-label">Inflammation</div><div class="bm-row"><div class="bm-top"><div><div class="bm-name">CRP (Inflammation)</div><div class="bm-ref">Ref: 0 - 1.0 mg/L</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>0.8</div><div class="bm-unit">mg/L</div></div></div><div class="rb-outer" id="bm-crp-p"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">CRP-0088</span></div></div></div>
+      <div class="cat-group"><div class="cat-label">Vitamins</div><div class="bm-row"><div class="bm-top"><div><div class="bm-name">Vitamin D</div><div class="bm-ref">Ref: 30 - 100 ng/mL</div></div><div class="bm-val-wrap"><div class="bm-val amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>32</div><div class="bm-unit">ng/mL</div></div></div><div class="rb-outer" id="bm-vitd-p"></div><div class="bm-bottom"><span class="status-pill sp-warn">Sub-Optimal</span><span class="bm-id">VTD-3200</span></div></div></div>
+    </div>
+
+    <div style="text-align:center;padding:32px 0 8px;border-top:1px solid var(--s100);margin-top:16px;">
+      <img src="data:image/png;base64,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" alt="algorx" style="height:24px;width:auto;display:inline-block;mix-blend-mode:multiply;">
+      <p style="font-size:11px;color:var(--s400);max-width:540px;margin:10px auto 0;line-height:1.75;text-transform:uppercase;letter-spacing:0.04em;">AlgoRX is not a clinical practice. Insights are advisory only. Always consult a licensed medical professional before altering any intervention.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- Prototype nav pill -->
+<nav class="proto-nav">
+  <button class="pnav-btn active" data-target="screen-1" onclick="showScreen('screen-1')">My Results</button>
+  <button class="pnav-btn" data-target="screen-2" onclick="showScreen('screen-2')">Generating</button>
+  <button class="pnav-btn" data-target="screen-3" onclick="showScreen('screen-3')">AI Report</button>
+  <button class="pnav-btn" data-target="screen-4" onclick="showScreen('screen-4')">Print View</button>
+</nav>
+
+<script>
+function switchTab(btn) {
+  // Toggle active within the parent tab group
+  const group = btn.closest('.site-nav-tabs');
+  group.querySelectorAll('.nav-tab-inline').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function startGeneration(btn) {
+  const card = btn.closest('.lab-card');
+  const bottom = card.querySelector('.lc-bottom');
+  bottom.innerHTML = `
+    <div>
+      <button class="btn btn-generating" disabled>
+        <span class="btn-spin"></span>
+        Generating...
+      </button>
+    </div>
+    <span class="lc-generating-note"><span class="lc-dots"><span></span><span></span><span></span></span>Running AI analysis - this may take 20 - 30 seconds</span>
+  `;
+  setTimeout(() => showScreen('screen-2'), 1800);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.pnav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.target === id);
+  });
+  window.scrollTo(0, 0);
+}
+
+function buildBar(containerId, opts) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const { value, min, max, optMin, optMax } = opts;
+  const isHighValue = value > max;
+  const rangeMax = isHighValue ? Math.max(max * 1.8, value * 1.4) : Math.max(max * 1.5, value * 1.25);
+  const pct = n => ((n / rangeMax) * 100).toFixed(2);
+  const pMin = pct(min), pMax = pct(max), pOMin = pct(optMin), pOMax = pct(optMax);
+  const pVal = Math.min(97.5, parseFloat(pct(value)));
+  const red = '#FF5338', amber = '#FFB533', teal = '#04C7B3';
+  let gradient;
+  if (min === 0) {
+    gradient = `linear-gradient(to right,${teal} 0%,${teal} ${pOMax}%,${amber} ${pOMax}%,${amber} ${pMax}%,${red} ${pMax}%,${red} 100%)`;
+  } else {
+    gradient = `linear-gradient(to right,${red} 0%,${red} ${pMin}%,${amber} ${pMin}%,${amber} ${pOMin}%,${teal} ${pOMin}%,${teal} ${pOMax}%,${amber} ${pOMax}%,${amber} ${pMax}%,${red} ${pMax}%,${red} 100%)`;
+  }
+  const labels = [];
+  if (min > 0) labels.push({ pos: pMin, val: min });
+  labels.push({ pos: pOMin, val: optMin }, { pos: pOMax, val: optMax }, { pos: pMax, val: max });
+  el.innerHTML = `
+    <div class="rb-labels">${labels.map(l=>`<span style="left:${l.pos}%">${l.val}</span>`).join('')}</div>
+    <div class="rb-bar">
+      <div class="rb-fill" style="background:${gradient}"></div>
+      <div class="rb-marker" style="left:${pVal}%"></div>
+    </div>`;
+}
+
+const MARKERS = [
+  {id:'bm-ttest',  value:680,  min:300, max:1100, optMin:700,  optMax:1000},
+  {id:'bm-ttest-p',value:680,  min:300, max:1100, optMin:700,  optMax:1000},
+  {id:'bm-ldl',   value:135,  min:0,   max:100,  optMin:0,    optMax:70},
+  {id:'bm-ldl-p', value:135,  min:0,   max:100,  optMin:0,    optMax:70},
+  {id:'bm-hdl',   value:48,   min:40,  max:100,  optMin:60,   optMax:90},
+  {id:'bm-hdl-p', value:48,   min:40,  max:100,  optMin:60,   optMax:90},
+  {id:'bm-crp',   value:0.8,  min:0,   max:1.0,  optMin:0,    optMax:0.5},
+  {id:'bm-crp-p', value:0.8,  min:0,   max:1.0,  optMin:0,    optMax:0.5},
+  {id:'bm-vitd',  value:32,   min:30,  max:100,  optMin:60,   optMax:80},
+  {id:'bm-vitd-p',value:32,   min:30,  max:100,  optMin:60,   optMax:80},
+];
+
+document.addEventListener('DOMContentLoaded', () => { MARKERS.forEach(m => buildBar(m.id, m)); });
+</script>
+</body>
+</html>
