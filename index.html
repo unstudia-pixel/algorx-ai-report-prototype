@@ -158,7 +158,7 @@ body {
   box-shadow: 0 2px 12px rgba(0,0,0,0.2);
 }
 .btn-dark:hover {
-  background: var(--s700);
+  background: #333;
   box-shadow: 0 4px 18px rgba(0,0,0,0.28);
   transform: translateY(-1px);
 }
@@ -169,7 +169,7 @@ body {
   box-shadow: 0 2px 10px rgba(0,0,0,0.22);
 }
 .btn-action:hover {
-  background: var(--s700);
+  background: #333;
   box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
@@ -272,10 +272,10 @@ body {
 .tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 .tag-ready { background: var(--lime); color: #000; }
 .tag-ready::before { background: #000; }
-.tag-pending { background: #fff0c0; color: #7a5200; }
-.tag-pending::before { background: var(--amber); }
-.tag-new { background: #fff0c0; color: #7a5200; }
-.tag-new::before { background: var(--amber); }
+.tag-pending { background: #000; color: white; }
+.tag-pending::before { background: var(--lime); }
+.tag-new { background: #000; color: white; }
+.tag-new::before { background: var(--lime); }
 
 .lc-markers { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
 .m-chip {
@@ -289,13 +289,13 @@ body {
   width: 13px; height: 13px; flex-shrink: 0;
   background: center/contain no-repeat;
 }
-.m-chip.crit { background: #fdddd7; color: #b83010; }
+.m-chip.crit { background: #000; color: white; }
 .m-chip.crit::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b83010' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='19' x2='12' y2='5'/%3E%3Cpolyline points='5 12 12 5 19 12'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='19' x2='12' y2='5'/%3E%3Cpolyline points='5 12 12 5 19 12'/%3E%3C/svg%3E");
 }
-.m-chip.warn { background: #fff0c0; color: #7a5200; }
+.m-chip.warn { background: rgba(233,255,0,0.18); color: #3a4a00; }
 .m-chip.warn::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a5200' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233a4a00' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
 }
 .m-chip:not(.crit):not(.warn)::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
@@ -376,12 +376,12 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; flex-shrink: 0; font-weight: 700;
 }
-.step-done { background: #e6faf8; color: #0a7a6e; }
+.step-done { background: var(--lime); color: #000; }
 .step-doing { background: #000; color: var(--lime); animation: step-pulse 1.5s ease-in-out infinite; }
 .step-wait { background: var(--s100); color: var(--s400); }
 @keyframes step-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 .step-text { font-size: 13px; font-weight: 500; color: var(--s600); }
-.step-text.done { color: #0a7a6e; }
+.step-text.done { color: #000; font-weight: 600; }
 .step-text.doing { color: #000; font-weight: 700; }
 
 /* ============================
@@ -499,8 +499,8 @@ body {
   letter-spacing: 0.15em; padding-left: 10px; border-left: 3px solid;
   margin-bottom: 12px; color: var(--s700);
 }
-.ic-col-head.red { border-color: var(--red); }
-.ic-col-head.blue { border-color: #000; }
+.ic-col-head.red { border-color: #000; }
+.ic-col-head.blue { border-color: var(--lime); }
 
 .alert-card {
   background: var(--s50); border-radius: 10px;
@@ -516,15 +516,15 @@ body {
   display: flex; align-items: center; gap: 4px; justify-content: flex-end;
 }
 .ac-val svg { width: 13px; height: 13px; flex-shrink: 0; }
-.ac-val.red { color: var(--red); }
-.ac-val.amber { color: var(--amber); }
+.ac-val.red { color: #000; }
+.ac-val.amber { color: #000; }
 .ac-pill {
   display: inline-block; font-size: 9px; font-weight: 700;
   padding: 2px 7px; border-radius: 999px;
   text-transform: uppercase; letter-spacing: 0.05em; margin-top: 3px;
 }
-.pill-red { background: var(--red); color: white; }
-.pill-amber { background: var(--amber); color: white; }
+.pill-red { background: #000; color: white; }
+.pill-amber { background: var(--lime); color: #000; }
 
 .rec { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--s100); }
 .rec:last-child { border-bottom: none; }
@@ -568,9 +568,9 @@ body {
   display: inline-flex; align-items: center; gap: 4px;
 }
 .bm-val svg { width: 17px; height: 17px; flex-shrink: 0; }
-.bm-val.red { color: var(--red); }
-.bm-val.amber { color: var(--amber); }
-.bm-val.teal { color: var(--teal); }
+.bm-val.red { color: #000; }
+.bm-val.amber { color: #000; }
+.bm-val.teal { color: #000; }
 .bm-unit { font-size: 11px; color: var(--s400); margin-top: 2px; }
 
 .rb-outer { position: relative; }
@@ -599,9 +599,9 @@ body {
   font-size: 11px; font-weight: 700; padding: 4px 12px;
   border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em;
 }
-.sp-crit { background: var(--red); color: white; }
-.sp-warn { background: var(--amber); color: white; }
-.sp-opt { background: var(--teal); color: white; }
+.sp-crit { background: #000; color: white; }
+.sp-warn { background: var(--lime); color: #000; }
+.sp-opt { background: var(--lime); color: #000; }
 .bm-id { font-size: 9px; color: var(--s400); font-weight: 500; letter-spacing: 0.1em; }
 
 /* ============================
