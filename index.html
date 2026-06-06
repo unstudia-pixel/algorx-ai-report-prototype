@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AlgoRX - AI Lab Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --lime: #C8FF00;
-  --lime-dark: #A8D900;
+  --lime: #E9FF00;
+  --lime-dark: #C8D800;
   --red: #FF5338;
   --amber: #FFB533;
   --teal: #04C7B3;
@@ -140,10 +140,11 @@ body {
 /* ---- Buttons ---- */
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
-  height: 40px; padding: 0 22px; border-radius: 999px; border: none;
-  font-family: inherit; font-size: 14px; font-weight: 600;
+  height: 40px; padding: 0 22px; border-radius: 4px; border: none;
+  font-family: 'Inter', inherit; font-size: 13px; font-weight: 700;
   cursor: pointer; transition: all 0.15s; white-space: nowrap;
-  line-height: 1; text-decoration: none;
+  line-height: 1; text-decoration: none; text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
@@ -158,14 +159,14 @@ body {
   transform: translateY(-1px);
 }
 
-/* Action - lime (like RENEW in live app) */
+/* Action - black (matches Figma primary CTA style) */
 .btn-action {
-  background: var(--lime); color: #000;
-  box-shadow: 0 2px 12px rgba(200,255,0,0.25);
+  background: #000; color: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.22);
 }
 .btn-action:hover {
-  background: var(--lime-dark);
-  transform: translateY(-1px);
+  background: var(--s700);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
 /* Outline */
@@ -183,25 +184,27 @@ body {
 /* Locked */
 .btn-locked {
   background: var(--s100); color: var(--s400);
-  cursor: not-allowed; border: none; height: 40px;
-  padding: 0 18px; font-size: 13px; border-radius: 999px;
+  cursor: not-allowed; border: 1px solid var(--s200); height: 40px;
+  padding: 0 18px; font-size: 12px; border-radius: 4px;
   display: inline-flex; align-items: center; gap: 7px;
-  font-family: inherit; font-weight: 500;
+  font-family: inherit; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;
 }
 .btn-sm {
-  background: #E2E8F0; color: #475569; border: none;
-  height: 36px; padding: 0 16px; font-size: 13px; border-radius: 999px;
+  background: white; color: #000; border: 1px solid rgba(0,0,0,0.4);
+  height: 36px; padding: 0 16px; font-size: 12px; border-radius: 4px;
   display: inline-flex; align-items: center; gap: 6px;
-  font-family: inherit; font-weight: 500; cursor: pointer; transition: background 0.15s;
+  font-family: inherit; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  text-transform: uppercase; letter-spacing: 0.03em;
 }
-.btn-sm:hover { background: #cbd5e1; }
+.btn-sm:hover { background: var(--s50); border-color: rgba(0,0,0,0.6); }
 
 /* Generating state */
 .btn-generating {
   background: #000; color: rgba(255,255,255,0.65);
   cursor: not-allowed; display: inline-flex; align-items: center; gap: 8px;
-  height: 40px; padding: 0 22px; border-radius: 999px; border: none;
-  font-family: inherit; font-size: 14px; font-weight: 600;
+  height: 40px; padding: 0 22px; border-radius: 4px; border: none;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.03em;
 }
 .btn-spin {
   width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0;
@@ -222,8 +225,9 @@ body {
 }
 
 .page-title {
-  font-size: 26px; font-weight: 800; letter-spacing: -0.3px;
-  color: var(--s900); margin-bottom: 4px; text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px; font-weight: 800; letter-spacing: -0.5px;
+  color: #000; margin-bottom: 4px; text-transform: uppercase;
 }
 .page-sub {
   font-size: 13px; color: var(--s400); font-weight: 400;
@@ -234,17 +238,17 @@ body {
    LAB CARDS
 ============================ */
 .lab-card {
-  background: white; border: 1px solid var(--s200);
-  border-radius: 10px; padding: 22px 26px;
+  background: white; border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px; padding: 22px 26px;
   margin-bottom: 12px; transition: box-shadow 0.2s, border-color 0.2s;
 }
-.lab-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); border-color: var(--s300); }
+.lab-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.2); }
 
 .lc-top {
   display: flex; align-items: flex-start;
   justify-content: space-between; gap: 16px; margin-bottom: 14px;
 }
-.lc-name { font-size: 20px; font-weight: 800; color: var(--s900); margin-bottom: 3px; letter-spacing: -0.3px; }
+.lc-name { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #000; margin-bottom: 3px; letter-spacing: -0.3px; text-transform: uppercase; }
 .lc-meta {
   font-size: 12px; color: var(--s400); font-weight: 400;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -257,8 +261,8 @@ body {
   letter-spacing: 0.01em; white-space: nowrap;
 }
 .tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.tag-ready { background: #d9f5f1; color: #057a70; }
-.tag-ready::before { background: var(--teal); }
+.tag-ready { background: var(--lime); color: #000; }
+.tag-ready::before { background: #000; }
 .tag-pending { background: #fff0c0; color: #7a5200; }
 .tag-pending::before { background: var(--amber); }
 .tag-new { background: #fff0c0; color: #7a5200; }
