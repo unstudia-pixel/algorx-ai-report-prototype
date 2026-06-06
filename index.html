@@ -319,9 +319,8 @@ body {
 ============================ */
 .gen-wrap {
   display: flex; flex-direction: column; align-items: center;
-  justify-content: center; min-height: calc(100dvh - var(--nav-h));
-  padding: 60px 24px 60px;
-  margin-top: 0;
+  min-height: 100dvh;
+  padding: calc(var(--nav-h) + 80px) 24px 80px;
 }
 .pulse-ring {
   position: relative; width: 80px; height: 80px; margin-bottom: 52px; margin-top: 0;
@@ -387,7 +386,7 @@ body {
 
 .rh-inner {
   max-width: var(--max-w); margin: 0 auto;
-  background: #0f0f0f url('report-header-bg.png') right top/50% auto no-repeat;
+  background: #0f0f0f url('report-header-bg.png') right center/auto 100% no-repeat;
   background-blend-mode: luminosity;
   border-radius: 16px;
   padding: 32px 40px 36px;
@@ -1016,7 +1015,7 @@ body {
     </div>
   </nav>
 
-  <div class="report-body" style="padding-top:32px;">
+  <div class="report-body" style="padding-top:calc(var(--nav-h) + 24px);">
     <div class="print-note">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Print-optimized layout. Use your browser print dialog or click Print Report.
