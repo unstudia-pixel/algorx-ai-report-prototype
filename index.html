@@ -320,31 +320,36 @@ body {
 .gen-wrap {
   display: flex; flex-direction: column; align-items: center;
   justify-content: center; min-height: calc(100dvh - var(--nav-h));
-  padding: 40px 24px 60px;
+  padding: 60px 24px 60px;
+  margin-top: 0;
 }
 .pulse-ring {
-  position: relative; width: 72px; height: 72px; margin-bottom: 52px; margin-top: -40px;
+  position: relative; width: 80px; height: 80px; margin-bottom: 52px; margin-top: 0;
 }
 .pulse-ring::before, .pulse-ring::after {
   content: ''; position: absolute; inset: 0; border-radius: 50%;
-  border: 2px solid var(--lime); animation: ring-out 2s ease-out infinite;
+  border: 2px solid #000; animation: ring-out 2s ease-out infinite;
 }
 .pulse-ring::after { animation-delay: 0.7s; }
 .pulse-core {
-  position: absolute; inset: 18px; border-radius: 50%;
-  background: var(--lime); animation: core-beat 2s ease-in-out infinite;
+  position: absolute; inset: 20px; border-radius: 50%;
+  background: #000; animation: core-beat 2s ease-in-out infinite;
 }
-@keyframes ring-out { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(2.6); opacity: 0; } }
-@keyframes core-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.82); } }
+@keyframes ring-out { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2.8); opacity: 0; } }
+@keyframes core-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.8); } }
 
-.gen-title { font-size: 20px; font-weight: 700; color: var(--s900); margin-bottom: 5px; text-align: center; }
+.gen-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px; font-weight: 800; color: #000; margin-bottom: 6px; text-align: center;
+  letter-spacing: -0.3px; text-transform: uppercase;
+}
 .gen-sub { font-size: 13px; color: var(--s400); text-align: center; }
 
 .dots { display: flex; gap: 6px; margin-top: 28px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--s300); animation: d-pop 1.4s ease-in-out infinite; }
 .dot:nth-child(2) { animation-delay: 0.2s; }
 .dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes d-pop { 0%, 80%, 100% { transform: scale(1); background: var(--s300); } 40% { transform: scale(1.4); background: var(--lime); } }
+@keyframes d-pop { 0%, 80%, 100% { transform: scale(1); background: var(--s300); } 40% { transform: scale(1.4); background: #000; } }
 
 .gen-steps {
   margin-top: 36px; display: flex; flex-direction: column; gap: 8px;
@@ -361,12 +366,12 @@ body {
   font-size: 12px; flex-shrink: 0; font-weight: 700;
 }
 .step-done { background: #e6faf8; color: #0a7a6e; }
-.step-doing { background: #eaff80; color: #557200; animation: step-pulse 1.5s ease-in-out infinite; }
+.step-doing { background: #000; color: var(--lime); animation: step-pulse 1.5s ease-in-out infinite; }
 .step-wait { background: var(--s100); color: var(--s400); }
 @keyframes step-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 .step-text { font-size: 13px; font-weight: 500; color: var(--s600); }
 .step-text.done { color: #0a7a6e; }
-.step-text.doing { color: #557200; font-weight: 600; }
+.step-text.doing { color: #000; font-weight: 700; }
 
 /* ============================
    REPORT HEADER (screen 3) — dark card, not full-bleed
