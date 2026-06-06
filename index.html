@@ -123,19 +123,19 @@ body {
 .site-nav-tabs::-webkit-scrollbar { display: none; }
 
 .nav-tab-inline {
-  font-family: inherit;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
-  color: rgba(255,255,255,0.45); height: 44px; padding: 0 14px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px; font-weight: 800; letter-spacing: 2.04px; text-transform: uppercase;
+  color: rgba(255,255,255,0.4); height: 44px; padding: 0 13px;
   border: none; background: transparent; border-radius: 0;
   cursor: pointer; transition: all 0.15s; white-space: nowrap;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
 }
 .nav-tab-inline.active {
-  color: white; font-weight: 700;
+  color: white; font-weight: 800;
   border-bottom-color: var(--lime);
 }
-.nav-tab-inline:hover:not(.active) { color: rgba(255,255,255,0.75); }
+.nav-tab-inline:hover:not(.active) { color: rgba(255,255,255,0.7); }
 
 /* ---- Buttons ---- */
 .btn {
@@ -224,14 +224,19 @@ body {
   min-height: calc(100dvh - 60px);
 }
 
+.page-eyebrow {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--s400); margin-bottom: 8px;
+}
 .page-title {
   font-family: 'Montserrat', sans-serif;
-  font-size: 26px; font-weight: 800; letter-spacing: -0.5px;
+  font-size: 28px; font-weight: 900; letter-spacing: -0.96px;
   color: #000; margin-bottom: 4px; text-transform: uppercase;
 }
 .page-sub {
-  font-size: 13px; color: var(--s400); font-weight: 400;
-  margin-bottom: 28px;
+  font-size: 12px; color: var(--s400); font-weight: 400;
+  margin-bottom: 28px; letter-spacing: 0.01em;
 }
 
 /* ============================
@@ -393,13 +398,16 @@ body {
 .rh-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--lime); flex-shrink: 0; }
 
 .rh-title {
-  font-size: clamp(28px, 4vw, 48px); font-weight: 800; color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(26px, 4vw, 44px); font-weight: 900; color: white;
   letter-spacing: -1.2px; line-height: 1.05; margin-bottom: 28px;
+  text-transform: uppercase;
 }
 .rh-meta-row { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 24px; }
 .rh-meta-label {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.13em;
-  text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 3px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px; font-weight: 800; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 4px;
 }
 .rh-meta-val { font-size: 14px; font-weight: 700; color: white; }
 
@@ -433,8 +441,8 @@ body {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .ic-icon svg { width: 17px; height: 17px; }
-.ic-title { font-size: 16px; font-weight: 700; color: var(--s900); }
-.ic-sub { font-size: 12px; color: var(--s400); font-weight: 400; margin-top: 2px; }
+.ic-title { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: #000; text-transform: uppercase; letter-spacing: -0.2px; }
+.ic-sub { font-size: 11px; color: var(--s400); font-weight: 400; margin-top: 3px; letter-spacing: 0.02em; }
 
 .ic-narrative {
   font-family: inherit; font-style: normal;
@@ -448,9 +456,10 @@ body {
 @media (max-width: 640px) { .ic-cols { grid-template-columns: 1fr; gap: 20px; } }
 
 .ic-col-head {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
   letter-spacing: 0.15em; padding-left: 10px; border-left: 3px solid;
-  margin-bottom: 12px; color: var(--s800);
+  margin-bottom: 12px; color: var(--s700);
 }
 .ic-col-head.red { border-color: var(--red); }
 .ic-col-head.blue { border-color: #000; }
@@ -464,8 +473,8 @@ body {
 .ac-ref { font-size: 11px; color: var(--s400); margin-top: 2px; }
 .ac-right { text-align: right; flex-shrink: 0; }
 .ac-val {
-  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: 20px; font-weight: 700; line-height: 1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px; font-weight: 700; line-height: 1;
   display: flex; align-items: center; gap: 4px; justify-content: flex-end;
 }
 .ac-val svg { width: 13px; height: 13px; flex-shrink: 0; }
@@ -489,8 +498,8 @@ body {
 .rec-text { font-size: 13px; color: var(--s600); line-height: 1.65; }
 
 /* Performance Matrix */
-.matrix-title { font-size: 22px; font-weight: 800; color: var(--s900); letter-spacing: -0.3px; }
-.matrix-sub { font-size: 13px; color: var(--s400); margin-top: 3px; }
+.matrix-title { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #000; letter-spacing: -0.3px; text-transform: uppercase; }
+.matrix-sub { font-size: 12px; color: var(--s400); margin-top: 4px; letter-spacing: 0.01em; }
 
 .legend {
   display: flex; gap: 12px; flex-wrap: wrap;
@@ -503,8 +512,9 @@ body {
 
 .cat-group { margin-bottom: 44px; }
 .cat-label {
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em;
-  color: var(--s500); margin-bottom: 22px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--s400); margin-bottom: 22px;
   display: flex; align-items: center; gap: 10px;
 }
 .cat-label::before, .cat-label::after { content: ''; flex: 1; height: 1px; background: var(--s200); }
@@ -515,8 +525,8 @@ body {
 .bm-ref { font-size: 11px; color: var(--s400); margin-top: 2px; }
 .bm-val-wrap { text-align: right; flex-shrink: 0; }
 .bm-val {
-  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px; font-weight: 700; letter-spacing: -0.5px; line-height: 1;
   display: inline-flex; align-items: center; gap: 4px;
 }
 .bm-val svg { width: 17px; height: 17px; flex-shrink: 0; }
@@ -642,6 +652,7 @@ body {
   </nav>
 
   <div class="page-content">
+    <p class="page-eyebrow">Lab Results</p>
     <h1 class="page-title">My Results</h1>
     <p class="page-sub">3 lab panels on file</p>
 
