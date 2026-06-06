@@ -365,67 +365,85 @@ body {
 .step-text.doing { color: #557200; font-weight: 600; }
 
 /* ============================
-   REPORT HEADER (screen 3)
+   REPORT HEADER (screen 3) — dark card, not full-bleed
 ============================ */
 .report-hero {
-  background: linear-gradient(rgba(0,0,0,0.78), rgba(0,0,0,0.68)), url('report-header-bg.png') center top/cover no-repeat;
-  background-color: #000;
+  background: var(--bg);
   padding-top: var(--nav-h);
 }
 
-.report-header { padding: 0 var(--side-pad); }
+.report-header {
+  padding: 24px var(--side-pad) 0;
+}
+
 .rh-inner {
   max-width: var(--max-w); margin: 0 auto;
-  padding: 36px 0 52px;
+  background: #0f0f0f url('report-header-bg.png') right top/50% auto no-repeat;
+  background-blend-mode: luminosity;
+  border-radius: 16px;
+  padding: 32px 40px 36px;
   position: relative;
+  overflow: hidden;
 }
+.rh-inner::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to right, #0f0f0f 55%, rgba(15,15,15,0.5) 100%);
+  pointer-events: none;
+}
+/* stack content above overlay */
+.rh-inner > * { position: relative; z-index: 1; }
+
 .rh-back {
   display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.12); border: none; border-radius: 6px;
-  padding: 5px 12px; font-family: inherit; font-size: 11px; font-weight: 600;
-  color: white; cursor: pointer; margin-bottom: 18px; transition: background 0.15s;
-  text-transform: uppercase; letter-spacing: 0.06em;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 5px 12px; font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700;
+  color: rgba(255,255,255,0.6); cursor: pointer; margin-bottom: 20px; transition: all 0.15s;
+  text-transform: uppercase; letter-spacing: 0.12em;
 }
-.rh-back:hover { background: rgba(255,255,255,0.22); }
-.rh-back svg { width: 13px; height: 13px; }
+.rh-back:hover { background: rgba(255,255,255,0.14); color: white; }
+.rh-back svg { width: 12px; height: 12px; }
 
 .rh-eyebrow {
   display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.14); border-radius: 6px; padding: 4px 10px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-  color: white; margin-bottom: 18px;
+  background: rgba(233,255,0,0.12); border: 1px solid rgba(233,255,0,0.25);
+  border-radius: 6px; padding: 4px 10px;
+  font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 16px;
 }
 .rh-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--lime); flex-shrink: 0; }
 
 .rh-title {
   font-family: 'Montserrat', sans-serif;
-  font-size: clamp(26px, 4vw, 44px); font-weight: 900; color: white;
-  letter-spacing: -1.2px; line-height: 1.05; margin-bottom: 28px;
+  font-size: clamp(24px, 3.5vw, 40px); font-weight: 900; color: white;
+  letter-spacing: -1px; line-height: 1.05; margin-bottom: 24px;
   text-transform: uppercase;
 }
-.rh-meta-row { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 24px; }
+.rh-meta-row { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 24px; }
 .rh-meta-label {
   font-family: 'Orbitron', sans-serif;
-  font-size: 8px; font-weight: 800; letter-spacing: 0.18em;
-  text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 4px;
+  font-size: 8px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--lime); margin-bottom: 5px;
 }
-.rh-meta-val { font-size: 14px; font-weight: 700; color: white; }
+.rh-meta-val { font-size: 14px; font-weight: 600; color: white; letter-spacing: 0.01em; }
 
 .junction-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.14); border-radius: 6px;
-  padding: 4px 10px; font-size: 11px; font-weight: 600; color: white;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 6px;
+  padding: 4px 10px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.6);
 }
-.junction-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); flex-shrink: 0; }
+.junction-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); flex-shrink: 0; }
 
-.rh-export { position: absolute; bottom: 52px; right: 0; }
+.rh-export { position: absolute; top: 32px; right: 40px; z-index: 2; }
 
 /* ============================
    REPORT BODY
 ============================ */
 .report-body {
   max-width: var(--max-w); margin: 0 auto;
-  padding: 36px var(--side-pad) 80px;
+  padding: 28px var(--side-pad) 80px;
 }
 
 .insight-card {
@@ -871,7 +889,7 @@ body {
           <div class="junction-badge"><span class="junction-dot"></span>Junction Verified</div>
         </div>
         <div class="rh-export">
-          <button class="btn btn-subtle btn-sm" onclick="window.print()">
+          <button class="btn" style="background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:0.12em;height:36px;padding:0 16px;" onclick="window.print()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Export PDF
           </button>
